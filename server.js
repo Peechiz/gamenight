@@ -3,6 +3,10 @@ const rp = require('request-promise');
 const convert = require('xml-js');
 
 let app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+const socket = require('./socket/connection')(io);
 
 app.use('/search/:term', (req,res) => {
   const query = req.params.term;
@@ -64,8 +68,6 @@ app.use('/search/:term', (req,res) => {
         return arr;
       },[])
 
-
-
       res.send(details)
     })
 
@@ -75,7 +77,6 @@ app.use('/search/:term', (req,res) => {
 app.use(express.static(__dirname + '/public'));
 
 const port = process.env.PORT || 9001;
-
-app.listen(port, ()=>{
+server.listen(port, ()=>{
   console.log(`Listening on ${port}`);
 })
