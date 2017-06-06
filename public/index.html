@@ -53,28 +53,36 @@
               <button @click="searchGames" class="btn btn-success" type="button">Search</button>
             </span>
           </div>
+          <p v-if="total">Total games: {{ total }}</p>
+
         </div>
       </div>
       <div class="row">
 
         <div v-for="game in games" class="col-md-4">
           <div class="thumbnail">
-            <img :src="game.img.tn">
+            <img v-if="game.detail" :src="game.img.tn">
             <div class="caption">
               <h4>{{ game.name }}</h3>
               <ul>
                 <li>Year: {{ game.year }}</li>
-                <li>Min: {{ game.minplayers }} players</li>
-                <li>Max: {{ game.maxplayers }} players</li>
-                <li>Time: {{ game.maxplayers }} minutes</li>
+                <li v-if="game.detail">Min: {{ game.minplayers }} players</li>
+                <li v-if="game.detail">Max: {{ game.maxplayers }} players</li>
+                <li v-if="game.detail">Time: {{ game.maxplayers }} minutes</li>
               </ul>
-              <p v-html="game.desc"></p>
+              <div v-if="!game.detail" class="spinner">a spinner is me!</div>
+              <p v-if="game.detail" v-html="game.desc"></p>
             </div>
           </div>
         </div>
 
     </div>
   </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+  </script>
   <script src="https://unpkg.com/vue"></script>
   <script type="text/javascript" src="script.js"></script>
 </body>

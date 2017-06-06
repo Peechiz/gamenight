@@ -8,20 +8,43 @@ var app = new Vue({
   el: '#search',
   data: {
     input: '',
-    list: null
+    game_data: null
+  },
+  created: function(){
+    var v = this;
+    socket.on('results', function(games){
+      console.log('WE GOT SOME');
+      v.game_data = games
+    })
   },
   computed: {
     games: function(){
-      return this.list
+      // console.dir(this.game_data);
+      // only update if there is stuff to show
+      if (this.game_data && this.game_data.items.item.length){
+        return this.game_data.items.item.reduce((arr, game) => {
+          arr.push({
+            name: game.name._attributes.value,
+            year: game.yearpublished._attributes.value,
+            id: game._attributes.id,
+            detail: null
+          })
+          return arr
+        },[])
+      }
+
+    },
+    total: function(){
+      return this.game_data ? this.game_data.items._attributes.total : null
     }
   },
   methods: {
     searchGames: function(){
-      console.log(this.input);
+      console.log('searching:',this.input);
 
-      $.get('/search/' + this.input, data => {
-        this.list = data;
-      })
+      socket.emit('search', this.input)
     }
   }
 })
+
+// handle 'results' and 'detail' events
