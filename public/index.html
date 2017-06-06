@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <style media="screen">
+    .sidebar {
+      background-color: grey;
+      height: 100vh;
+    }
+    .navbar{
+      margin-bottom: 0;
+      border-bottom: 1px solid grey;
+    }
+    .game {
+      background-color: lightgrey;
+    }
+    .searchbar {
+      margin: 2em 0;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header class="navbar navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="" class="navbar-brand">GameLib</a>
+      </div>
+      <nav class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="">Hello</a></li>
+          <li><a href="">There</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <nav class="col-md-2 sidebar"></nav>
+  <main class="col-md-10" id="search">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="input-group searchbar">
+            <input type="text" class="form-control" v-model="input" placeholder="Search Boardgames...">
+            <span class="input-group-btn">
+              <button @click="searchGames" class="btn btn-success" type="button">Search</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+
+        <div v-for="game in games" class="col-md-4">
+          <div class="thumbnail">
+            <img :src="game.img.tn">
+            <div class="caption">
+              <h4>{{ game.name }}</h3>
+              <ul>
+                <li>Year: {{ game.year }}</li>
+                <li>Min: {{ game.minplayers }} players</li>
+                <li>Max: {{ game.maxplayers }} players</li>
+                <li>Time: {{ game.maxplayers }} minutes</li>
+              </ul>
+              <p v-html="game.desc"></p>
+            </div>
+          </div>
+        </div>
+
+    </div>
+  </main>
+  <script src="https://unpkg.com/vue"></script>
+  <script type="text/javascript" src="script.js"></script>
+</body>
+
+</html>
