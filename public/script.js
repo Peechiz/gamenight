@@ -8,40 +8,57 @@ var app = new Vue({
   el: '#search',
   data: {
     input: '',
-    game_data: null
+    games: null
   },
   created: function(){
     var v = this;
+
     socket.on('results', function(games){
-      console.log('WE GOT SOME');
-      v.game_data = games
+      v.addGames(games)
     })
+
+    socket.on('detail', function(detail){
+      v.updateGames(detail);
+    })
+
   },
   computed: {
-    games: function(){
-      // console.dir(this.game_data);
-      // only update if there is stuff to show
-      if (this.game_data && this.game_data.items.item.length){
-        return this.game_data.items.item.reduce((arr, game) => {
+    total: function(){
+      return this.games ? this.games.length : null
+    }
+  },
+  methods: {
+    addGames: function(games){
+
+      if (games.items.item.length){
+        this.games = games.items.item.reduce((arr, game) => {
           arr.push({
             name: game.name._attributes.value,
             year: game.yearpublished._attributes.value,
             id: game._attributes.id,
-            detail: null
+            detail: false
           })
           return arr
         },[])
+      } else {
+        console.log('no games found');
       }
-
     },
-    total: function(){
-      return this.game_data ? this.game_data.items._attributes.total : null
-    }
-  },
-  methods: {
+    updateGames: function(detail){
+
+      this.games = this.games.map(game => {
+        if (game.id === detail.id){
+          Object.keys(detail).forEach( key => {
+            if (key !== 'id'){
+              game[key] = detail[key];
+            }
+          })
+        }
+        return game
+      })
+    },
     searchGames: function(){
       console.log('searching:',this.input);
-
       socket.emit('search', this.input)
     }
   }
